@@ -170,7 +170,6 @@ static SValue *copy(SValue *val)
           },
         };
         return func;
-        // return SVALUE.scheme_func(params, body, ENV.get_parent(val->val.func.f.scheme.env));
       }
     default:
       return SVALUE.errorf("copy is not implemented for type: %s", SVALUE_TYPE.to_string(val->type));

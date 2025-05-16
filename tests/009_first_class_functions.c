@@ -9,10 +9,17 @@ int main() {
 
   Array *res = CONS.list.to_array(sval);
 
-  assert_str_equals("8", SVALUE.to_string(*(SValue **) res->get(res, 2)), __FILE__, __LINE__);
-  assert_str_equals("1337", SVALUE.to_string(*(SValue **) res->get(res, 3)), __FILE__, __LINE__);
-  assert_str_equals("1337", SVALUE.to_string(*(SValue **) res->get(res, 5)), __FILE__, __LINE__);
+  char *strval = SVALUE.to_string(*(SValue **) res->get(res, 2));
+  assert_str_equals("8", strval, __FILE__, __LINE__);
+  free(strval);
+  strval = SVALUE.to_string(*(SValue **) res->get(res, 3));
+  assert_str_equals("1337", strval, __FILE__, __LINE__);
+  free(strval);
+  strval = SVALUE.to_string(*(SValue **) res->get(res, 5));
+  assert_str_equals("1337", strval, __FILE__, __LINE__);
+  free(strval);
 
   res->release(&res);
+  cx->release(&cx);
 	return 0;
 }

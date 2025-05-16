@@ -58,14 +58,18 @@ static SValue* apply(SValue *sform, Rc* /*Env**/ env, SValue *args) {
 
 static SValue* define(Rc* /*Env**/ env, SValue *args)
 {
-  if (!args || !args->val.cons.cdr || args->val.cons.cdr->val.cons.cdr) {
-    return SVALUE.errorf("exactly two arguments are expected (define)");
+  size_t args_len = CONS.list.len(args);
+  if (!args && args_len < 2) {
+    return SVALUE.errorf("at least two arguments expected (define)");
   }
 
   SValue *head = CONS.car(args);
   SValue *body = CONS.cdar(args);
 
   if (SVAL_TYPE_SYMBOL == head->type) {
+    if (args_len != 2) {
+      return SVALUE.errorf("two arguments expected (define), got: %d\n", args_len);
+    }
     // just a symbol - evaluate args beforehand and just store val
     SValue *sval = EVAL(env, body);
     if (SVAL_TYPE_ERR == sval->type) {
@@ -103,7 +107,6 @@ static SValue* lambda(Rc* /*Env**/ env, SValue *args)
   if (!CONS.is_list(args) || CONS.list.len(args) < 2) {
     return SVALUE.errorf("expected list at least 2 arguments (lambda) (got %d)",
                          CONS.list.len(args));
-
   }
 
   SValue *params = CONS.car(args);
